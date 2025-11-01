@@ -1,0 +1,25 @@
+steps:
+  - label: ":go: Build"
+    plugins:
+      - docker#v5.13.0:
+          image: "golang:1.25.3-alpine3.22"
+    command:
+      - "cd hello && go build"
+    artifact_paths:
+      - "hello/hello"
+  - block: ":polar-bear-police: Input needed"
+    prompt: "Please provide your name"
+    fields:
+      - text: "Your name"
+        key: "your-name"
+  - label: ":wave: Greet"
+    command: |
+      ARTIFACT_FILEPATH=hello/hello
+      LOCAL_ARTIFACT_DIR=app
+      LOCAL_ARTIFACT_FILEPATH="$${LOCAL_ARTIFACT_DIR}"/"$${ARTIFACT_FILEPATH}"
+      UNBLOCKER_NAME="$(buildkite-agent meta-data get your-name)"
+
+      mkdir -p "$${LOCAL_ARTIFACT_DIR}"
+      buildkite-agent artifact download "$${ARTIFACT_FILEPATH}" "$${LOCAL_ARTIFACT_DIR}"
+      chmod +x "$${LOCAL_ARTIFACT_FILEPATH}"
+      ./"$${LOCAL_ARTIFACT_FILEPATH}" "$${UNBLOCKER_NAME}"
