@@ -5,7 +5,7 @@ steps:
       - docker#v5.13.0:
           image: "golang:1.25.3-alpine3.22"
       - test-collector#v1.11.0:
-          files: "hello/junit.xml"
+          files: "junit.xml"
           format: "junit"
           branches: "main"
   - label: ":go: Build"
