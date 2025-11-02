@@ -2,6 +2,8 @@ steps:
   - label: ":test_tube: Test"
     command: "go run gotest.tools/gotestsum@latest --junitfile junit.xml ./..."
     plugins:
+      - docker#v5.13.0:
+          image: "golang:1.25.3-alpine3.22"
       - test-collector#v1.11.0:
           files: "hello/junit.xml"
           format: "junit"
